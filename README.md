@@ -1,11 +1,16 @@
-# 微信小程序开发模板
+# 小程序开发框架
 
-项目解决了小程序开发中的哪些问题:
-1. 如果你想使用原生语法开发小程序(不依赖于第三方如mpvue, wepy等)
-2. 引入mobx解决状态管理问题, 文档地址: https://cn.mobx.js.org/
-3. 使用less打包成wxss, 并实时watch和build src目录下所有less文件
-4. 使用webpack打包js文件,并实时watch和build src目录下所有js文件
-5. 封装了wx.request, 可方便使用get, post, put, delete方法(类似axios)
+## 特点
+  1. 使用原生语法开发小程序(不依赖于第三方如mpvue, wepy等)
+  2. 使用Mobx作为状态管理, Mobx文档地址: https://cn.mobx.js.org/
+  3. 使用less作为CSS预处理语言并通过gulp打包成wxss文件
+  4. 使用webpack打包JS文件
+  5. 引入eslint, 保证代码的一致性和避免错误
+  6. 使用Promise封装了wx api(如wxapi('login').then(({ code }) => code))
+  7. 使用Promise封装了wx.request, 可方便使用get, post, put, delete方法(类似axios)
+
+## 目录结构
+
 
 ## 1. 安装和构建
 ``` bash

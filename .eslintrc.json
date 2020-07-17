@@ -27,6 +27,7 @@
     "camelcase": "off"
   },
   "globals": {
+    "wx": true,
     "getApp": true
   }
 }
