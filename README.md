@@ -11,6 +11,32 @@
 
 ## 目录结构
 
+```code
+├── package.json
+├── README.md
+├── scripts
+│   ├── createPage.js
+│   ├── gulp.config.js
+│   ├── utils.js
+│   └── webpack.config.js
+├── src
+│   ├── app.js
+│   ├── app.json
+│   ├── app.less
+│   ├── pages
+│   │   └── index
+│   │       ├── index.js
+│   │       ├── index.json
+│   │       ├── index.less
+│   │       └── index.wxml
+│   ├── project.config.json
+│   ├── sitemap.json
+│   ├── styles
+│   │   └── var.less
+│   └── utils
+│       └── wxapi.js
+└── yarn.lock
+```
 
 ## 1. 安装和构建
 ``` bash
