@@ -28,6 +28,9 @@
   },
   "globals": {
     "wx": true,
-    "getApp": true
+    "App": true,
+    "getApp": true,
+    "Page": true,
+    "Component": true
   }
 }
