@@ -19,14 +19,16 @@ const config = {
     wxml: resolve('src/**/*.wxml'),
     wxss: resolve('src/**/*.wxss'),
     json: resolve('src/**/*.json'),
-    static: resolve('src/static/**/*.*')
+    static: resolve('src/static/**/*.*'),
+    vant: resolve('node_modules/@vant/weapp/dist/**/*.*')
   },
   watch: {
     less: resolve('src/**/*.less')
   },
   dist: {
     default: resolve('dist'),
-    static: resolve('dist/static')
+    static: resolve('dist/static'),
+    vant: resolve('dist/components/vant')
   }
 }
 
@@ -84,6 +86,11 @@ const taskStatic = () => {
     .pipe(gulp.dest(config.dist.static))
 }
 
+const taskCopyVant = () => {
+  return gulp.src(config.src.vant)
+    .pipe(gulp.dest(config.dist.vant))
+}
+
 const taskClean = () => {
   const rm = util.promisify(rimraf)
 
@@ -108,4 +115,4 @@ const taskWatch = () => {
   gulp.watch(watch.static, gulp.series(taskStatic))
 }
 
-exports.default = gulp.series(taskClean, gulp.parallel(taskWxml, taskWxss, taskJson, taskWebpack, taskLess, taskStatic, taskWatch))
+exports.default = gulp.series(taskClean, gulp.parallel(taskWxml, taskWxss, taskJson, taskWebpack, taskLess, taskStatic, taskCopyVant, taskWatch))
