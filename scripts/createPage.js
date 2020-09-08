@@ -128,7 +128,7 @@ inquirer.prompt(questions).then(({ module, folder, filename = 'index' }) => {
     // update app.json
     if (isCreatePage && !app.pages.includes(entry)) {
       app.pages.push(entry)
-      fs.writeFileSync(resolve('app.json'), JSON.stringify(app, null, 2))
+      fs.writeFileSync(resolve('app.json'), JSON.stringify(app, null, '\t'))
     }
   })
 })
