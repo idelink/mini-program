@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { resolve } = require('./utils')
 
 const getEntries = () => {
@@ -72,6 +73,16 @@ const webpackConfig = {
       }
     ]
   },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: resolve('node_modules/@vant/weapp/dist'),
+          to: resolve('dist/components/vant')
+        }
+      ]
+    })
+  ],
   devtool: false
 }
 

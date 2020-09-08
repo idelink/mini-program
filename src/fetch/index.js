@@ -6,8 +6,6 @@ const baseURL = 'https://www.gogoing.site/api'
 function Fetch() {
 }
 
-console.log(store)
-
 Fetch.prototype.request = options => {
   const { token } = store
   const { _quiet, _mask } = options

@@ -8,7 +8,5 @@ App({
   createComponent,
   onLaunch() {
     console.log('app launch')
-
-    fetch.get('/auth')
   }
 })

@@ -3,7 +3,7 @@ import { observable, computed, action } from 'mobx'
 class Store {
   @observable token = ''
 
-  @observable userInfo = { username: 'vegan.qian' }
+  @observable userInfo = null
 
   @computed get isLogin() {
     return !!(this.userInfo && this.userInfo.id)

@@ -1,9 +1,9 @@
 const { createPage } = getApp()
 
 createPage({
-  use: ['userInfo', 'token'],
+  use: ['isLogin', 'userInfo', 'token'],
   onLoad() {
-    console.log(this.data)
     console.log('page onload')
+    console.log(this.data)
   }
 })
