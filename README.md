@@ -1,8 +1,9 @@
 # 小程序开发框架
 
 ## 特点
+
   1. 使用原生语法开发小程序(不依赖于第三方如mpvue, wepy等)
-  2. 使用Mobx作为状态管理, Mobx文档地址: https://cn.mobx.js.org/
+  2. 使用Mobx作为状态管理, Mobx文档地址: <https://cn.mobx.js.org/>
   3. 使用less作为CSS预处理语言并通过gulp打包成wxss文件
   4. 使用webpack打包JS文件
   5. 引入eslint, 保证代码的一致性和避免错误
@@ -39,6 +40,7 @@
 ```
 
 ## 1. 安装和构建
+
 ``` bash
 # 安装依赖
 yarn install
@@ -48,11 +50,14 @@ yarn start
 
 注意: 选择dist目录为小程序所在路径
 ```
+
 ## 2. Mobx状态管理
+
 直接上代码吧
 
 1. 定义store(参考src/store/index.js)
-```
+
+```js
 import { observable, computed, action } from 'mobx'
 
 class Store {
@@ -85,8 +90,10 @@ class Store {
 
 export default new Store()
 ```
-2. 在页面和组件中使用store   
-```
+
+1. 在页面和组件中使用store
+
+```code
   i. 在使用之前,需要通过createPage和createComponent创建页面/组件
   ii. create实现了绑定store到页面和组件中以及初始化默认数据, 并实时更新页面/组件中使用到的store中的数据
   iii. 在创建页面和组件时,使用关键字use来加载使用到的store中的数据
@@ -124,11 +131,13 @@ createPage({
 ```
 
 注意：
+
   1. 如果要使用store, 必须使用createPage方法创建页面, 和Page的参数不变
   2. 使用use来获取store里面的数据
   3. 使用store.update或store.$set方法来更新store中的数据
 
 ## 3. gulp和webpack
+
 ```bash
 * 需先运行命令`yarn start`
   1. 项目使用gulp来打包less文件, 并生成对应的wxss文件。
@@ -139,8 +148,10 @@ createPage({
 ```
 
 ## 4. request
+
 在src/fetch/index.js中, 封装了wx.request方法, 并且已经添加到了app.js中。
 使用方法(fetch中get, post, put, delete参数格式都是一致的, 如get方法)：
+
 ```js
 const { fetch } = getApp()
 fetch.get(url: String, formData: Object, config: Object)

@@ -10,6 +10,9 @@
     "start": "gulp --gulpfile scripts/gulp.config.js",
     "page": "node scripts/createPage.js"
   },
+  "dependencies": {
+    "mobx": "^5.15.6"
+  },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.10.5",

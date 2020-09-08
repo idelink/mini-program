@@ -121,7 +121,7 @@ inquirer.prompt(questions).then(({ module, folder, filename = 'index' }) => {
 
   Object.keys(template).forEach(ext => {
     const data = template[ext]
-    const entry = `/pages/${folder.trim()}/${filename.trim()}`
+    const entry = `pages/${folder.trim()}/${filename.trim()}`
 
     fs.writeFileSync(path.resolve(`${distDir}/${filename.trim()}.${ext}`), data.trim())
 

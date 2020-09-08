@@ -35,6 +35,12 @@ const webpackConfig = {
     publicPath: '/',
     filename: '[name].js'
   },
+  resolve: {
+    extensions: ['.js', '.json', '.less'],
+    alias: {
+      '@': resolve('src')
+    }
+  },
   module: {
     rules: [
       {

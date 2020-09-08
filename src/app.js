@@ -1,16 +1,14 @@
+import { baseURL, fetch } from '@/fetch'
+import { createPage, createComponent } from '@/core/create'
+
 App({
+  fetch,
+  baseURL,
+  createPage,
+  createComponent,
   onLaunch() {
     console.log('app launch')
-    class Animal {
-      constructor(name) {
-        this.name = name
-      }
 
-      eat() {
-        console.log(this.name, 'eating')
-      }
-    }
-
-    console.log(new Animal('fejkru'))
+    fetch.get('/auth')
   }
 })
