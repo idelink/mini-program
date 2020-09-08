@@ -36,9 +36,9 @@ Fetch.prototype.request = options => {
           }
           if (statusCode == 401) {
             store.update({ token: null })
-            // wx.navigateTo({
-            //   url: '/pages/user/index'
-            // })
+            wx.navigateTo({
+              url: '/pages/user/index'
+            })
           }
           reject(data)
         }

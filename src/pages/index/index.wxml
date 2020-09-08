@@ -1,1 +1,3 @@
-<view class="">template</view>
+<view class="">
+  <navigator url="/pages/user/index">to user</navigator>
+</view>

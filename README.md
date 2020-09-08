@@ -13,6 +13,7 @@
 ## 目录结构
 
 ```code
+.
 ├── package.json
 ├── README.md
 ├── scripts
@@ -24,14 +25,16 @@
 │   ├── app.js
 │   ├── app.json
 │   ├── app.less
+│   ├── core
+│   │   └── create.js
+│   ├── fetch
+│   │   └── index.js
 │   ├── pages
 │   │   └── index
-│   │       ├── index.js
-│   │       ├── index.json
-│   │       ├── index.less
-│   │       └── index.wxml
 │   ├── project.config.json
 │   ├── sitemap.json
+│   ├── store
+│   │   └── index.js
 │   ├── styles
 │   │   └── var.less
 │   └── utils
@@ -46,7 +49,7 @@
 yarn install
 
 # 打包项目文件
-yarn start
+yarn run start
 
 注意: 选择dist目录为小程序所在路径
 ```
@@ -96,8 +99,8 @@ export default new Store()
 ```code
   i. 在使用之前,需要通过createPage和createComponent创建页面/组件
   ii. create实现了绑定store到页面和组件中以及初始化默认数据, 并实时更新页面/组件中使用到的store中的数据
-  iii. 在创建页面和组件时,使用关键字use来加载使用到的store中的数据
-  iv. 在页面和组件中,通过this.store.update方法来更新store中的数据,且该数据会实时通过到页面中
+  iii. 在创建页面和组件时,使用关键字`use`来加载使用到的store中的数据
+  iv. 在页面和组件中,通过this.store.update方法来更新store中的数据,且该数据会实时更新数据到页面中
 ```
 
 ``` js
@@ -133,7 +136,7 @@ createPage({
 注意：
 
   1. 如果要使用store, 必须使用createPage方法创建页面, 和Page的参数不变
-  2. 使用use来获取store里面的数据
+  2. 使用`use`来获取store里面的数据
   3. 使用store.update或store.$set方法来更新store中的数据
 
 ## 3. gulp和webpack
@@ -144,7 +147,7 @@ createPage({
   2. 除了styles目录下的所有less文件,其余在pages和components目录下的所有文件都会被打包。
   3. 打包规则(配置见build/gulp.config.js, build/webpack.config.js)
     i: 对于不同的less, js, wxml, json文件, 都由相应的task来处理
-    ii: 每次新增组件或页面时, 需重新运行打包命令
+    ii: 项目中引入vant组件库, 所在目录为`/components/vant/`
 ```
 
 ## 4. request
@@ -161,4 +164,37 @@ fetch.get(url: String, formData: Object, config: Object)
   .catch(e => {
     xxx
   })
+```
+
+config中默认参数:
+
+  1. `_quiet`: 是否在请求返回错误时不显示错误通知, 默认false即默认通知
+  2. `_mask`: loading动画是否显示遮罩，默认为false即不显示遮罩
+
+## 快速创建页面和组件
+
+因为项目中使用了less作为CSS预处理语言，通过小程序开发者工具创建页面和组件时极为不便，所以封装了命令以快速创建页面和组件。
+在命令行中运行`yarn run page`得到如下对话框：
+
+```code
+? 创建类型:  
+  1) 页面
+  2) 组件
+  Answer: 
+```
+
+然后根据提示输入对应的值即可，并且新增的页面将会自动添加到app.json的pages中。
+完整的创建流程如下：
+
+```code
+[vegan.qian@cws88 mini-program]$ yarn run page
+yarn run v1.22.4
+$ node scripts/createPage.js
+? 创建类型:  page
+? 文件夹名称:  user
+? 页面名称:  (index) pages/user
+? 页面名称:  index
+
+正在创建...
+Done in 4.96s.
 ```
