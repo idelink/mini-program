@@ -103,37 +103,89 @@ export default new Store()
   iv. 在页面和组件中,通过this.store.update方法来更新store中的数据,且该数据会实时更新数据到页面中
 ```
 
+在store中定义以下数据:
+
+```js
+import { observable, computed, action } from 'mobx'
+import Wallet from './wallet'
+
+class Store {
+  @observable token = ''
+
+  @observable userInfo = null
+
+  @observable wallet = new Wallet()
+
+  @computed get isLogin() {
+    return !!(this.userInfo && this.userInfo.id)
+  }
+
+  @action.bound update(data) {
+    for (const key in data) {
+      this[key] = data[key]
+    }
+  }
+
+  @action.bound $set(key, attr, value) {
+    const data = this[key]
+    if (data) {
+      data[attr] = value
+      if (Array.isArray(data)) {
+        this[key] = [...data]
+      } else {
+        this[key] = { ...data }
+      }
+    }
+  }
+}
+
+export default new Store()
+```
+
+其中wallet为模块, `update`和`$set`为更新store中数据的方法，在页面/组件中通过`this.store.update`和`this.store.$set`调用。
+
+在wxml中，定义两个更新按钮以便更新store中的数据：
+
+```html
+<view class="">
+  <button bind:tap="handleChangeToken">更新token</button>
+  <view><text>token: {{ token }}</text></view>
+  <button bind:tap="handleChangeBalance">更新balance</button>
+  <view><text>balance: {{ wallet.balance }}</text></view>
+  <!-- to user -->
+  <navigator url="/pages/user/index">to user</navigator>
+</view>
+```
+
+在js中，通过`createPage`方法创建页面，以及通过关键字`use`来使用store中的数据：
+
 ``` js
 const { createPage } = getApp()
+
 createPage({
-  data: {
-    test: ''
-  },
-  use: ['isLogin', 'userInfo'],
+  use: ['isLogin', 'userInfo', 'token', 'wallet'],
   onLoad() {
+    console.log('page onload')
     console.log(this.data)
   },
   handleChangeToken() {
     this.store.update({
-      token: Math.random().toString(36).substr(2),
-      userInfo: {
-        id: 1,
-        username: 'user name'
-      }
+      userInfo: { id: 1, username: 'vegan.qian' },
+      token: Math.random().toString(36).substr(2)
     })
+
+    console.log(this.data)
+  },
+  handleChangeBalance() {
+    this.store.$set('wallet', 'balance', Math.ceil(Math.random() * 1000))
+
     console.log(this.data)
   }
 })
+
 ```
 
-```wxml
-<view class="page home">
-  <button bind:tap="handleChangeToken">改变token</button>
-  <view><text>{{ token }}</text></view>
-</view>
-```
-
-注意：
+再次注意：
 
   1. 如果要使用store, 必须使用createPage方法创建页面, 和Page的参数不变
   2. 使用`use`来获取store里面的数据
@@ -187,7 +239,7 @@ config中默认参数:
 完整的创建流程如下：
 
 ```code
-[vegan.qian@cws88 mini-program]$ yarn run page
+[vegan.qian@pc mini-program]$ yarn run page
 yarn run v1.22.4
 $ node scripts/createPage.js
 ? 创建类型:  page

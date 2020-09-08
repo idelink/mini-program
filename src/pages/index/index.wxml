@@ -1,3 +1,8 @@
 <view class="">
+  <button bind:tap="handleChangeToken">更新token</button>
+  <view><text>token: {{ token }}</text></view>
+  <button bind:tap="handleChangeBalance">更新balance</button>
+  <view><text>balance: {{ wallet.balance }}</text></view>
+  <!-- to user -->
   <navigator url="/pages/user/index">to user</navigator>
 </view>

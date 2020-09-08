@@ -1,9 +1,12 @@
 import { observable, computed, action } from 'mobx'
+import Wallet from './wallet'
 
 class Store {
   @observable token = ''
 
   @observable userInfo = null
+
+  @observable wallet = new Wallet()
 
   @computed get isLogin() {
     return !!(this.userInfo && this.userInfo.id)
