@@ -1,4 +1,4 @@
-import store from '@/store'
+import store from '../store/index'
 
 const baseURL = 'https://www.gogoing.site/api'
 // const baseURL = 'http://localhost:3010/api'

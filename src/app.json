@@ -4,11 +4,12 @@
     "pages/user/index"
   ],
   "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle": "black"
+		"navigationBarBackgroundColor": "@navBackgroundColor",
+		"navigationBarTitleText": "Wechat",
+		"navigationBarTextStyle": "@navTextStyle"
   },
+	"darkmode": true,
+  "themeLocation": "theme.json",
   "networkTimeout": {
     "request": 10000,
     "connectSocket": 10000,

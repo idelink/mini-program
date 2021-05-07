@@ -43,11 +43,9 @@ const questions = [
     message: ({ module }) => `${module == 'page' ? '页面' : '组件'}名称: `,
     validate(input, { module, folder }) {
       const done = this.async()
-      const folderPath = path.join(module == 'components' ? 'components' : 'pages', '/', folder.trim())
+      const folderPath = path.join(module == 'component' ? 'components' : 'pages', '/', folder.trim())
       const distDir = resolve(folderPath)
       const fileDir = resolve(folderPath, `${input.trim()}.js`)
-
-      console.log(folderPath)
 
       if (exist(distDir) && isDirectory(distDir) && exist(fileDir)) {
         return done(`${folder}已经存在`)

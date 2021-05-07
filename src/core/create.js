@@ -1,4 +1,4 @@
-import store from '@/store'
+import store from '../store/index'
 import { autorun, reaction, toJS } from 'mobx'
 
 const using = new Proxy([], {
@@ -11,10 +11,20 @@ const using = new Proxy([], {
     }
 
     reaction(() => store[value], data => {
-      // eslint-disable-next-line no-undef
       getCurrentPages().forEach(page => {
+        const result = toJS(data)
+        if (page.watch) {
+          for (const key in page.watch) {
+            if (key == value) {
+              const fn = page.watch[key]
+
+              fn.call(page, result, page.data[key])
+              break
+            }
+          }
+        }
         if (Array.isArray(page.use) && page.use.includes(value)) {
-          page.setData({ [value]: toJS(data) })
+          page.setData({ [value]: result })
         }
       })
     }, { delay: 100 })

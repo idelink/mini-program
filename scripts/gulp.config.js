@@ -1,35 +1,58 @@
+const fs = require('fs')
 const util = require('util')
 const rimraf = require('rimraf')
 const gulp = require('gulp')
 const less = require('gulp-less')
-const webpack = require('webpack')
 const postcss = require('gulp-postcss')
 const cssnano = require('gulp-cssnano')
 const rename = require('gulp-rename')
+const watch = require('gulp-watch')
 const autoprefixer = require('autoprefixer')
+const child_process = require('child_process')
+const exec = util.promisify(child_process.exec)
 const { resolve } = require('./utils')
+const packageJSON = require('../package.json')
 
 const config = {
   src: {
-    js: resolve('src/**/*.js'),
     less: [
       resolve('src/**/*.less'),
       `!${resolve('src/styles/*.less')}`
     ],
-    wxml: resolve('src/**/*.wxml'),
-    wxss: resolve('src/**/*.wxss'),
-    json: resolve('src/**/*.json'),
-    static: resolve('src/static/**/*.*'),
-    vant: resolve('node_modules/@vant/weapp/dist/**/*.*')
+    static: [
+      resolve('src/**/*.*'),
+      `!${resolve('src/**/*.less')}`
+    ]
   },
   watch: {
     less: resolve('src/**/*.less')
   },
   dist: {
-    default: resolve('dist'),
-    static: resolve('dist/static'),
-    vant: resolve('dist/components/vant')
+    default: resolve('dist')
   }
+}
+
+const taskNpm = () => {
+  const _resolve = resolve
+  return new Promise((resolve, reject) => {
+    const keys = ['name', 'version', 'license', 'author', 'description', 'dependencies']
+    const result = keys.reduce((result, key) => {
+      result[key] = packageJSON[key]
+
+      return result
+    }, {})
+
+    fs.writeFile(_resolve(config.dist.default, 'package.json'), JSON.stringify(result, null, '\t'), e => {
+      if (e) {
+        reject(e)
+      } else {
+        resolve()
+        exec('yarn install', {
+          cwd: _resolve(config.dist.default)
+        })
+      }
+    })
+  })
 }
 
 const taskLess = () => {
@@ -52,67 +75,33 @@ const taskLess = () => {
     .pipe(gulp.dest(config.dist.default))
 }
 
-const taskWebpack = () => {
-  const { getEntries, webpackConfig } = require('./webpack.config.js')
-
-  return new Promise((resolve) => {
-    webpackConfig.entry = getEntries()
-    webpack(webpackConfig, e => {
-      if (e) {
-        throw new Error(e)
-      }
-      resolve()
-    })
-  })
-}
-
-const taskWxml = () => {
-  return gulp.src(config.src.wxml)
-    .pipe(gulp.dest(config.dist.default))
-}
-
-const taskWxss = () => {
-  return gulp.src(config.src.wxss)
-    .pipe(gulp.dest(config.dist.default))
-}
-
-const taskJson = () => {
-  return gulp.src(config.src.json)
-    .pipe(gulp.dest(config.dist.default))
-}
-
 const taskStatic = () => {
   return gulp.src(config.src.static)
-    .pipe(gulp.dest(config.dist.static))
-}
-
-const taskCopyVant = () => {
-  return gulp.src(config.src.vant)
-    .pipe(gulp.dest(config.dist.vant))
-}
-
-const taskClean = () => {
-  const rm = util.promisify(rimraf)
-
-  return rm(config.dist.default).then(e => {
-    if (e) {
-      throw e
-    }
-  })
+    .pipe(gulp.dest(config.dist.default))
 }
 
 const taskWatch = () => {
-  const watch = {
-    ...config.src,
-    ...config.watch
-  }
-
-  gulp.watch(watch.less, gulp.series(taskLess))
-  gulp.watch(watch.js, gulp.series(taskWebpack))
-  gulp.watch(watch.wxml, gulp.series(taskWxml))
-  gulp.watch(watch.wxss, gulp.series(taskWxss))
-  gulp.watch(watch.json, gulp.series(taskJson))
-  gulp.watch(watch.static, gulp.series(taskStatic))
+  watch(config.watch.less, gulp.series(taskLess))
+  watch(config.src.static, gulp.series(taskStatic))
 }
 
-exports.default = gulp.series(taskClean, gulp.parallel(taskWxml, taskWxss, taskJson, taskWebpack, taskLess, taskStatic, taskCopyVant, taskWatch))
+const taskClean = () => {
+  if (!fs.existsSync(config.dist.default)) {
+    return Promise.resolve()
+  }
+
+  const exludes = ['miniprogram_npm']
+  const rm = util.promisify(rimraf)
+  const promises = fs.readdirSync(config.dist.default)
+    .filter(filename => !exludes.includes(filename))
+    .map(filename => rm(resolve(config.dist.default, filename)))
+
+  return Promise.all(promises)
+}
+
+exports.default = gulp.series(
+  taskClean,
+  gulp.parallel(taskLess, taskStatic),
+  taskNpm,
+  taskWatch
+)

@@ -2,6 +2,11 @@ const { createPage } = getApp()
 
 createPage({
   use: ['isLogin', 'userInfo', 'token', 'wallet'],
+  watch: {
+    token(val, oldVal) {
+      console.log('token has changed: ', val, oldVal)
+    }
+  },
   onLoad() {
     console.log('page onload')
     console.log(this.data)

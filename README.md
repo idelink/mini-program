@@ -5,7 +5,7 @@
   1. 使用原生语法开发小程序(不依赖于第三方如mpvue, wepy等)
   2. 使用Mobx作为状态管理, Mobx文档地址: <https://cn.mobx.js.org/>
   3. 使用less作为CSS预处理语言并通过gulp打包成wxss文件
-  4. 使用webpack打包JS文件
+  4. 使用npm模块
   5. 引入eslint, 保证代码的一致性和避免错误
   6. 使用Promise封装了wx api(如wxapi('login').then(({ code }) => code))
   7. 使用Promise封装了wx.request, 可方便使用get, post, put, delete方法(类似axios)
@@ -20,7 +20,6 @@
 │   ├── createPage.js
 │   ├── gulp.config.js
 │   ├── utils.js
-│   └── webpack.config.js
 ├── src
 │   ├── app.js
 │   ├── app.json
@@ -157,7 +156,7 @@ export default new Store()
 </view>
 ```
 
-在js中，通过`createPage`方法创建页面，以及通过关键字`use`来使用store中的数据：
+在js中文件中，通过`createPage`方法创建页面，以及通过关键字`use`来使用store中的数据：
 
 ``` js
 const { createPage } = getApp()
@@ -189,20 +188,25 @@ createPage({
 
   1. 如果要使用store, 必须使用createPage方法创建页面, 和Page的参数不变
   2. 使用`use`来获取store里面的数据
-  3. 使用store.update或store.$set方法来更新store中的数据
+  3. 使用`store.update`或`store.$set`方法来更新store中的数据
 
-## 3. gulp和webpack
+## 3. gulp
 
 ```bash
-* 需先运行命令`yarn start`
+* 需先运行命令`yarn run install`&`yarn start`
   1. 项目使用gulp来打包less文件, 并生成对应的wxss文件。
   2. 除了styles目录下的所有less文件,其余在pages和components目录下的所有文件都会被打包。
-  3. 打包规则(配置见build/gulp.config.js, build/webpack.config.js)
+  3. 打包规则(配置见build/gulp.config.js)
     i: 对于不同的less, js, wxml, json文件, 都由相应的task来处理
-    ii: 项目中引入vant组件库, 所在目录为`/components/vant/`
 ```
 
-## 4. request
+## 4. 构建npm
+
+项目中使用npm模块, 在运行start命令后, 将自动安装dependencies中的依赖并保存到`dist`目录中, 然后只需要在微信开发者工具中点击`构建npm`即可
+
+注意: npm模块只会安装dependencies中的依赖, 会自动忽略‵devDependencies‵
+
+## 5. request
 
 在src/fetch/index.js中, 封装了wx.request方法, 并且已经添加到了app.js中。
 使用方法(fetch中get, post, put, delete参数格式都是一致的, 如get方法)：
@@ -223,7 +227,7 @@ config中默认参数:
   1. `_quiet`: 是否在请求返回错误时不显示错误通知, 默认false即默认通知
   2. `_mask`: loading动画是否显示遮罩，默认为false即不显示遮罩
 
-## 快速创建页面和组件
+## 6. 快速创建页面和组件
 
 因为项目中使用了less作为CSS预处理语言，通过小程序开发者工具创建页面和组件时极为不便，所以封装了命令以快速创建页面和组件。
 在命令行中运行`yarn run page`得到如下对话框：
@@ -250,3 +254,4 @@ $ node scripts/createPage.js
 正在创建...
 Done in 4.96s.
 ```
+
