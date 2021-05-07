@@ -1,6 +1,7 @@
 import store from '../store/index'
 import { autorun, reaction, toJS } from 'mobx'
 
+const instances = {}
 const using = new Proxy([], {
   get(target, key, receiver) {
     return Reflect.get(target, key, receiver)
@@ -11,8 +12,9 @@ const using = new Proxy([], {
     }
 
     reaction(() => store[value], data => {
+      const result = toJS(data)
+      // update page state
       getCurrentPages().forEach(page => {
-        const result = toJS(data)
         if (page.watch) {
           for (const key in page.watch) {
             if (key == value) {
@@ -27,6 +29,15 @@ const using = new Proxy([], {
           page.setData({ [value]: result })
         }
       })
+
+      // update component state
+      for (const key in instances) {
+        instances[key].forEach(ins => {
+          if (Array.isArray(ins.use) && ins.use.includes(value)) {
+            ins.setData({ [value]: result })
+          }
+        })
+      }
     }, { delay: 100 })
 
     return Reflect.set(target, key, value, receiver)
@@ -44,7 +55,9 @@ export const createPage = (options = {}) => {
         })
       })
     })
+
     disposer()
+
     onLoad && onLoad.call(this, e)
   }
 
@@ -55,9 +68,11 @@ export const createComponent = (options = {}) => {
   options.lifetimes = options.lifetimes || {}
   const ready = options.lifetimes.ready || options.ready
   const created = options.lifetimes.created || options.created
+  const detached = options.lifetimes.detached || options.detached
 
   options.lifetimes.created = options.created = function(e) {
     this.store = store
+    this.use = options.use
     created && created.call(this, e)
   }
 
@@ -70,8 +85,24 @@ export const createComponent = (options = {}) => {
         })
       })
     })
+
     disposer()
+
+    if (!instances[this.is]) {
+      instances[this.is] = []
+    }
+
+    instances[this.is].push(this)
+
     ready && ready.call(this, e)
+  }
+
+  options.lifetimes.detached = options.detached = function(e) {
+    if (instances[this.is]) {
+      instances[this.is] = instances[this.is].filter(ins => ins !== this)
+    }
+
+    detached && detached.call(this, e)
   }
 
   Component(options)

@@ -105,6 +105,10 @@ inquirer.prompt(questions).then(({ module, folder, filename = 'index' }) => {
 
   console.log('\n正在创建...')
 
+  if (!fs.existsSync(baseDir)) {
+    fs.mkdirSync(baseDir)
+  }
+
   // create folders
   folders.reduce((result, folder) => {
     result.push(folder)

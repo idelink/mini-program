@@ -1,0 +1,9 @@
+<view class="test">
+  <text>来自组件的数据</text>
+  <view>
+    <text>token: {{ token }}</text>
+  </view>
+  <view>
+    <text>balance: {{ wallet.balance }}</text>
+  </view>
+</view>

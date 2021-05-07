@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "component-test": "/components/test/index"
+  },
   "backgroundColor": "#FFF"
 }

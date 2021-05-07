@@ -20,8 +20,7 @@ App({
         }
       })
     })
-    
-    
+
     console.log('app launch')
   }
 })
